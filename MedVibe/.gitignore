@@ -1,0 +1,85 @@
+# ======================
+# macOS
+# ======================
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ======================
+# Xcode
+# ======================
+DerivedData/
+*.xcuserdata/
+*.xccheckout
+*.xcuserstate
+*.moved-aside
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+xcuserdata/
+
+# Xcode previews
+**/Previews/**
+
+# ======================
+# Swift / SwiftUI
+# ======================
+.build/
+.swiftpm/
+
+# ======================
+# SwiftData / CoreData
+# (stores are runtime-only)
+# ======================
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# ======================
+# Dependency managers
+# ======================
+Pods/
+Carthage/Build/
+
+# ======================
+# Fastlane
+# ======================
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# ======================
+# Code injection / debugging
+# ======================
+iOSInjectionProject/
+
+# ======================
+# Secrets / local config
+# ======================
+.env
+*.p12
+*.mobileprovision
+*.cer
+
+# ======================
+# Logs & temp
+# ======================
+*.log
+tmp/
+
+# ======================
+# Playgrounds
+# ======================
+timeline.xctimeline
+playground.xcworkspace
+
+# ======================
+# SwiftLint / tools (если появятся)
+# ======================
+.swiftlint.yml
+.swiftlint.cache
+# Xcode user data
+*.xcuserdata/
+xcuserdata/
