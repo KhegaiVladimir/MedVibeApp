@@ -90,7 +90,7 @@ MedVibe is built with a **crash-safe SwiftData architecture**.
 ---
 
 ## 📁 Project Structure
-
+```
 MedVibe/
 ├── App/
 │ ├── MedVibeApp.swift
@@ -108,7 +108,7 @@ MedVibe/
 │ └── Library/
 └── UI/
 └── Components/
-
+```
 ---
 
 ## 📌 Status
