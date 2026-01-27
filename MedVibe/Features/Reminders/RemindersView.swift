@@ -131,43 +131,13 @@ struct RemindersView: View {
                     ScrollView {
                         LazyVStack(spacing: DesignSystem.Spacing.md) {
                             ForEach(reminderRows) { row in
-                                ReminderCard(
-                                    row: row,
-                                    onEdit: { 
-                                        // Re-fetch reminder by stable ID for edit
-                                        if let reminder = fetchReminder(id: row.id, in: modelContext) ?? fetchReminder(stableId: row.stableId, in: modelContext) {
-                                            editReminder(reminder)
-                                        } else {
-                                            #if DEBUG
-                                            print("⚠️ Model missing (likely reset/deleted) — ignoring edit action")
-                                            #endif
-                                        }
-                                    },
-                                    onDelete: { 
-                                        // Re-fetch reminder by stable ID for delete
-                                        if let reminder = fetchReminder(id: row.id, in: modelContext) ?? fetchReminder(stableId: row.stableId, in: modelContext) {
-                                            deleteReminder(reminder)
-                                        } else {
-                                            #if DEBUG
-                                            print("⚠️ Model missing (likely reset/deleted) — ignoring delete action")
-                                            #endif
-                                        }
-                                    }
-                                )
-                                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                        Button(role: .destructive) {
-                                            if let reminder = fetchReminder(id: row.id, in: modelContext) ?? fetchReminder(stableId: row.stableId, in: modelContext) {
-                                                deleteReminder(reminder)
-                                            } else {
-                                                #if DEBUG
-                                                print("⚠️ Model missing (likely reset/deleted) — ignoring delete action")
-                                                #endif
-                                            }
-                                        } label: {
-                                            Label("Delete", systemImage: "trash")
-                                        }
-                                        
-                                        Button {
+                                NavigationLink {
+                                    ReminderDetailView(reminderId: row.id, reminderStableId: row.stableId)
+                                } label: {
+                                    ReminderCard(
+                                        row: row,
+                                        onEdit: { 
+                                            // Re-fetch reminder by stable ID for edit
                                             if let reminder = fetchReminder(id: row.id, in: modelContext) ?? fetchReminder(stableId: row.stableId, in: modelContext) {
                                                 editReminder(reminder)
                                             } else {
@@ -175,11 +145,46 @@ struct RemindersView: View {
                                                 print("⚠️ Model missing (likely reset/deleted) — ignoring edit action")
                                                 #endif
                                             }
-                                        } label: {
-                                            Label("Edit", systemImage: "pencil")
+                                        },
+                                        onDelete: { 
+                                            // Re-fetch reminder by stable ID for delete
+                                            if let reminder = fetchReminder(id: row.id, in: modelContext) ?? fetchReminder(stableId: row.stableId, in: modelContext) {
+                                                deleteReminder(reminder)
+                                            } else {
+                                                #if DEBUG
+                                                print("⚠️ Model missing (likely reset/deleted) — ignoring delete action")
+                                                #endif
+                                            }
                                         }
-                                        .tint(DesignSystem.Colors.primary)
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                    Button(role: .destructive) {
+                                        if let reminder = fetchReminder(id: row.id, in: modelContext) ?? fetchReminder(stableId: row.stableId, in: modelContext) {
+                                            deleteReminder(reminder)
+                                        } else {
+                                            #if DEBUG
+                                            print("⚠️ Model missing (likely reset/deleted) — ignoring delete action")
+                                            #endif
+                                        }
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
                                     }
+                                    
+                                    Button {
+                                        if let reminder = fetchReminder(id: row.id, in: modelContext) ?? fetchReminder(stableId: row.stableId, in: modelContext) {
+                                            editReminder(reminder)
+                                        } else {
+                                            #if DEBUG
+                                            print("⚠️ Model missing (likely reset/deleted) — ignoring edit action")
+                                            #endif
+                                        }
+                                    } label: {
+                                        Label("Edit", systemImage: "pencil")
+                                    }
+                                    .tint(DesignSystem.Colors.primary)
+                                }
                             }
                         }
                         .padding(DesignSystem.Spacing.md)

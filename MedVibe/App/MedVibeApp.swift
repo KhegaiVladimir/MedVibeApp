@@ -14,6 +14,7 @@ struct MedVibeApp: App {
             MedicalRecord.self,
             Reminder.self,
             ReminderSchedule.self,
+            ReminderAttachment.self,
             DailyLogEntry.self
         ])
 

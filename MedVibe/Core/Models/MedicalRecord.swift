@@ -6,8 +6,11 @@ final class MedicalRecord {
     /// Stable identifier for safe re-fetching (never changes, generated in init)
     var stableId: String
     
-    /// Date when record was created
+    /// Date when record was created in the system
     var createdAt: Date
+    
+    /// User-chosen document date (when document was created/received)
+    var documentDate: Date
     
     /// Title of the medical record
     var title: String
@@ -16,7 +19,11 @@ final class MedicalRecord {
     var summary: String
     
     /// Date of the medical record (legacy field, kept for backward compatibility)
-    var date: Date
+    /// Maps to documentDate for backward compatibility
+    var date: Date {
+        get { documentDate }
+        set { documentDate = newValue }
+    }
     
     /// Type of scanned document: "pdf" or "jpeg"
     var type: String?
@@ -29,10 +36,6 @@ final class MedicalRecord {
     
     /// Optional note about the record
     var note: String?
-    
-    // optional link to reminder
-    @Relationship
-    var reminder: Reminder?
     
     /// Computed property to get tags as array
     var tagsArray: [String] {
@@ -63,9 +66,9 @@ final class MedicalRecord {
     ) {
         self.stableId = stableId
         self.createdAt = createdAt
+        self.documentDate = date
         self.title = title
         self.summary = summary
-        self.date = date
         self.type = nil
         self.filePath = nil
         self.tagsString = nil
@@ -73,6 +76,15 @@ final class MedicalRecord {
     }
     
     /// Initializer for scanned documents
+    /// - Parameters:
+    ///   - title: Document title (defaults to "Scan YYYY-MM-DD" if nil)
+    ///   - type: Document type ("pdf" or "jpeg")
+    ///   - filePath: Absolute file path as string
+    ///   - tags: Optional tags array
+    ///   - note: Optional note/description
+    ///   - stableId: Stable identifier (defaults to UUID)
+    ///   - createdAt: When the record was created in the system (defaults to now)
+    ///   - documentDate: User-chosen document date (defaults to createdAt)
     init(
         title: String? = nil,
         type: String,
@@ -80,10 +92,15 @@ final class MedicalRecord {
         tags: [String] = [],
         note: String? = nil,
         stableId: String = UUID().uuidString,
-        createdAt: Date = Date()
+        createdAt: Date = Date(),
+        documentDate: Date? = nil
     ) {
         self.stableId = stableId
         self.createdAt = createdAt
+        
+        // Calculate documentDate first (use local variable to avoid self access before initialization)
+        let finalDocumentDate = documentDate ?? createdAt
+        self.documentDate = finalDocumentDate
         
         // Generate default title if not provided
         if let title = title {
@@ -91,11 +108,10 @@ final class MedicalRecord {
         } else {
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
-            self.title = "Scan \(formatter.string(from: createdAt))"
+            self.title = "Scan \(formatter.string(from: finalDocumentDate))"
         }
         
         self.summary = "" // Empty for scanned documents
-        self.date = createdAt // Use creation date as record date
         self.type = type
         self.filePath = filePath
         self.tagsString = tags.isEmpty ? nil : tags.joined(separator: ", ")
